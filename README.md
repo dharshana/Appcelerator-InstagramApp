@@ -1,18 +1,25 @@
 
-Appcelerator Instagram App
+#Appcelerator Instagram App
 ---------------------------
 
-features:
+###features:
 users can see all their exsisting photos in a grid view by login using thire Instaram username and password. Photos are loaded only when it is visible. uses also can logout from the application. 
 
 
 
-Developed Envirnment: 
-Application Type : 
+###Developed Envirnment
+Application Type : Mobile App / Android 
 
-Mobile Titanium SDK : 3.5 or the latest on 31st of July 2013 
-Platform & version: Android 2.3.3 
-Device: Android emulator Host 
-Operating System: Windows 7 
-Titanium Studio: 3.1.1
+Titanium SDK : 3.5
+
+Platform : Android
+
+Device Tested : Samsung S3
+
+Android Version: 4.3
+
+Operating System: Windows 8 
+
+Titanium Studio: 4.0.0
+
 
