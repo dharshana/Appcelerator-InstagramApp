@@ -14,7 +14,7 @@ exports.loginView = function(){
 		border: 0,
 		backgroundColor: 'white',
 		borderColor: '#aaa',
-		// zIndex: -1
+		zIndex: 1000
    	});
    	
    	var pageHeader = Ti.UI.createView({
@@ -24,12 +24,11 @@ exports.loginView = function(){
 		backgroundColor : '#009ce6',
 	});
 	var profilePic = Ti.UI.createImageView({
-			left : '2.5%',
-			height : '80%',
-			image : Ti.App.Properties.getString("profile_pic"),
+		left : '2.5%',
+		height : '80%',
+		image : Ti.App.Properties.getString("profile_pic"),
 	});
 		
-	
 	var imgLogout = Ti.UI.createImageView({
 			right : '2.5%',
 			height : '70%',
@@ -41,24 +40,19 @@ exports.loginView = function(){
 	pageHeader.add(profilePic);
 	pageHeader.add(imgLogout);
    	
-   	login_view.add(pageHeader);
-   	
-   	
    	var webView = Ti.UI.createWebView({
-            top: appPixel * 8,
+            //top: appPixel * 8,
+            top: 0,
             width: '100%',
-            height: '80%', // new
-            //url: pUrl,
+            height: '100%', 
             autoDetect: [Ti.UI.AUTODETECT_NONE]
     });
     webView.url = Authorized_URL+'?response_type=token&client_id=1e1aa9f97e2b4326ac56fcab1fc9a2ad&redirect_uri=http://www.geewantha.com&scope=likes+comments&display=touch';
     
     webView.addEventListener('beforeload', function(e){
-    	console.log('URL : '+ e.url);
     	if (e.url.indexOf('#access_token') != -1){
             var token = e.url.split("=")[1];
             Ti.App.Properties.setString("access_token",token);
-            console.log('>>>> Token : ' + Ti.App.Properties.getString("access_token"));
             webView.stopLoading();
             
             var params = {
@@ -73,15 +67,10 @@ exports.loginView = function(){
 			    	
 			    	var JSONObject = [];
 					var JSONObject = JSON.parse(this.responseText);
-					console.log('>>> Response text : ' + this.responseText);
 					
-			        // Ti.API.info(">>>> Usernmae " + JSONObject.data.username);
 			        Ti.App.Properties.setString("username",JSONObject.data.username);
 			        Ti.App.Properties.setString("user_id",JSONObject.data.id);
 			        Ti.App.Properties.setString("profile_pic",JSONObject.data.profile_picture);
-			        //alert('success');
-			        
-			        console.log('>>> Image : ' + Ti.App.Properties.getString("profile_pic"));
 			        
 			        var toast2 = Ti.UI.createNotification({
 						message : "Welcome, "+Ti.App.Properties.getString("username"),
@@ -104,8 +93,6 @@ exports.loginView = function(){
 			 xhr.send(params);
             
         } else if (e.url.indexOf('error=access_denied') != -1) {
-            //Ti.App.fireEvent('app:instagram_access_denied', {});
-            //destroyAuthorizeUI();
             console.log('>>>>> ACESS DENIED');
             var toast1 = Ti.UI.createNotification({
 				message : "App Cannot be proceed without your Authorization",

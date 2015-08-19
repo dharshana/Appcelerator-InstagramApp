@@ -8,7 +8,7 @@ exports.getImageList = function(){
 		width : '100%',
 	});
 	var pageHeader = Ti.UI.createView({
-		height : appPixel * 10,
+		height : appPixel * 8,
 		top : appPixel * 0,
 		width : '100%',
 		backgroundColor : '#009ce6',
@@ -19,35 +19,51 @@ exports.getImageList = function(){
 			height : '80%',
 			image : Ti.App.Properties.getString("profile_pic"),
 	});
-		
-	
 	var imgLogout = Ti.UI.createImageView({
 			right : '2.5%',
 			height : '70%',
 			image : '/images/quit.png',
 	});
+	
+	// logout event
 	imgLogout.addEventListener('click', function(){
-		alert('clicked');
+		appLogoffConf.show();
+		//mainView.remove(imagesView);
+		//Ti.App.fireEvent('logout');
 	});
+	
+	
+	var appLogoffConf = Ti.UI.createAlertDialog({
+		cancel: 1,
+		buttonNames: ['Yes', 'No'],
+		message: 'Are you sure you want to logout now?',
+	});
+		
+	appLogoffConf.addEventListener('click', function(e){
+		if (e.index === e.source.cancel){
+		    // cancel area
+		}else{
+		    //var activity = Titanium.Android.currentActivity; activity.finish();
+		    mainView.remove(imagesView);
+			Ti.App.fireEvent('logout');
+			var toast1 = Ti.UI.createNotification({
+				message : "You've Succesfully Logged Out",
+				duration : Ti.UI.NOTIFICATION_DURATION_LONG
+			});
+			toast1.show();
+		}
+	});
+	
 	pageHeader.add(profilePic);
 	pageHeader.add(imgLogout);
 	main_view.add(pageHeader);
 	
-	
-	
-	
-	/*
-	var imagesView = Ti.UI.createView({
-		top : deviceHeight * 0.08,
-		layout : 'vertical',
-		height : deviceHeight * 0.92,
-	});
-	*/
+	main_view.add(appLogoffConf);
 	
 	var imagesView = Ti.UI.createView({
-		top : appPixel * 10,
+		top : appPixel * 8,
 		layout : 'vertical',
-		height : appPixel * 90,
+		height : appPixel * 92,
 	});
 	
 	//---- image table view ---
@@ -55,17 +71,11 @@ exports.getImageList = function(){
 		
 	});
 	
-	// logout event 
-	profilePic.addEventListener('click', function(e){
-		console.log(">>>> logout");
-		//Ti.App.fireEvent('logout');
-	});
-	
 	imagesView.add(imageTableView);
 	loadImages();
 	
 	//---- EOF Image table View ---
-	// mainView.add(imagesView);
+	mainView.add(imagesView);
 	
 	var imageTableData = [];
 	
@@ -81,15 +91,9 @@ exports.getImageList = function(){
 		    onload : function(e) {
 		    	var JSONObject = [];
 				var JSONObject = JSON.parse(this.responseText);
-		        //Ti.App.Properties.setString("profile_pic",JSONObject.data.profile_picture);		       
-		        //profilePic.image = Ti.App.Properties.getString("profile_pic");
-		        //console.log('>>> Images response  : '+this.responseText);
-		        //console.log('>>> Number of Images  : '+JSONObject.data.length);
 		        for(var i = 0 ; i < JSONObject.data.length; i++){
-		        	console.log('>>> image url : '+JSONObject.data[i].images.standard_resolution.url);
 		        	var tableRow = Ti.UI.createTableViewRow({
 						className : 'forumEvent', // used to improve table performance
-						//selectedBackgroundColor : accountviewdropdownselectedcolor,
 						rowIndex : i, // custom property, useful for determining the row during events
 						id : JSONObject.data[i].id,
 						height : appPixel * 50,
@@ -127,8 +131,7 @@ exports.getImageList = function(){
 		    // function called when the response data is available
 		    onload : function(e) {
 		    	var JSONObject = [];
-				var JSONObject = JSON.parse(this.responseText);
-		        Ti.App.Properties.setString("profile_pic",JSONObject.data.profile_picture);		       
+				var JSONObject = JSON.parse(this.responseText);      
 		        profilePic.image = Ti.App.Properties.getString("profile_pic");
 		    },
 		    // function called when an error occurs, including a timeout

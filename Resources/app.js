@@ -15,6 +15,7 @@ var deviceWidth = ((Titanium.Platform.displayCaps.platformWidth * 1) / logicalDe
 var Authorized_URL = 'https://instagram.com/oauth/authorize/'; 		// Login and authrize URL , 
 var UserDetails_URL = 'https://api.instagram.com/v1/users/self/';	// URL to get user details using access token, 
 var UserFeeds_URL = 'https://api.instagram.com/v1/users/';			// URL to get latest feeds from user, https://api.instagram.com/v1/users/{user-id}/media/recent/?access_token=ACCESS-TOKEN
+var logout_url = 'https://instagram.com/accounts/logout/';
 
 // main window
 var win = Ti.UI.createWindow({
@@ -29,13 +30,6 @@ var main_view = Ti.UI.createView({
 });
 win.add(main_view);
 
-// Event listener for signoff  
-Ti.App.addEventListener('logout', function(){
-	// reset config parameters
-	Ti.App.Properties.removeProperty("login");
-	main_view.remove(view_imageList);
-	Ti.App.fireEvent('loadLoginView');
-});
 
 // event listener for Image loading 
 Ti.App.addEventListener('loadImages', function(){	
@@ -44,26 +38,64 @@ Ti.App.addEventListener('loadImages', function(){
 	main_view.add(view_imageList);
 });
 
+// web view for signoff loading
+var webView2 = Ti.UI.createWebView({
+    visible: false,
+    autoDetect: [Ti.UI.AUTODETECT_NONE]
+});
+main_view.add(webView2);
+
+// Event listener for signoff  
+Ti.App.addEventListener('logout', function(){
+	// reset config parameters
+	Ti.App.Properties.removeProperty("login");
+	webView2.url =  logout_url;
+	// openlogin view after successful signoff 
+	webView2.addEventListener('load', function(){
+		Ti.App.fireEvent('loadLoginView');
+	});
+});
+
 // event listener for Login view
-Ti.App.addEventListener('loadLoginView', function(){	
+Ti.App.addEventListener('loadLoginView', function(){
 	var objloginView = require('include/login');
 	var loginView = objloginView.loginView(); 	 
 	main_view.add(loginView);
 });
 
-
-
-
-if(!Ti.App.Properties.hasProperty("login") ){
-	
-	//
-	Ti.App.fireEvent('loadLoginView');
-
-    
-   // main_view.add(login_view);
-    
-}else { 
-	Ti.App.fireEvent('loadImages');
+// if device connect to the internet
+if (Titanium.Network.online) {
+		if(!Ti.App.Properties.hasProperty("login") ){
+			Ti.App.fireEvent('loadLoginView');
+		}else { 
+			Ti.App.fireEvent('loadImages');
+		}
+}else{
+		var toast4 = Ti.UI.createNotification({
+				message : "No internet connection available",
+				duration : Ti.UI.NOTIFICATION_DURATION_LONG
+		});
+		toast4.show();	
 }
+
+
+win.addEventListener('android:back',function(e) {
+	appCloseConf.show();
+	return false;
+});
+
+var appCloseConf = Ti.UI.createAlertDialog({
+	cancel: 1,
+	buttonNames: ['Yes', 'No'],
+	message: 'Do you want to Close this App?',
+});
+	
+appCloseConf.addEventListener('click', function(e){
+	if (e.index === e.source.cancel){
+	    // cancel area
+	}else{
+	    var activity = Titanium.Android.currentActivity; activity.finish();
+	}
+});
 
 win.open();
