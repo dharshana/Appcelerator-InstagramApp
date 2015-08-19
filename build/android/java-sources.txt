@@ -1,0 +1,8 @@
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/android/support/v7/appcompat/R.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/ApplicationStylesheet.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/AssetCryptImpl.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/IntergramActivity.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/IntergramAppInfo.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/IntergramApplication.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/com/geewantha/intergram/R.java"
+"C:/Users/dharshana/Documents/Appcelerator_Studio_Workspace/intergram/build/android/gen/ti/modules/titanium/ui/R.java"
