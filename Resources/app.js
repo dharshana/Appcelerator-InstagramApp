@@ -78,6 +78,34 @@ if (Titanium.Network.online) {
 		toast4.show();	
 }
 
+// Content loading screen
+var loadView = Ti.UI.createView({
+    backgroundColor: 'black',
+    opacity: 0.75,
+    height: '100%',
+    width: '100%', visible: false,
+});
+ 
+var loadIndicator = Ti.UI.createActivityIndicator({
+    style: Ti.UI.ActivityIndicatorStyle.BIG,
+    message: 'Loading...',
+    //font : 'Arial',
+    font:{fontSize:30,fontFamily:'Helvetica Neue'},
+    color: '#FFF',
+});
+ 
+loadView.add(loadIndicator);
+win.add(loadView);
+
+Ti.App.addEventListener('openLoadingScreen', function(){
+	loadView.visible = true;
+    loadIndicator.show();
+});
+
+Ti.App.addEventListener('hideLoadingScreen', function(){
+	loadView.visible = false;
+    loadIndicator.hide();
+});
 
 win.addEventListener('android:back',function(e) {
 	appCloseConf.show();

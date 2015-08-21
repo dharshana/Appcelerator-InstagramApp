@@ -50,6 +50,7 @@ exports.loginView = function(){
     webView.url = Authorized_URL+'?response_type=token&client_id=1e1aa9f97e2b4326ac56fcab1fc9a2ad&redirect_uri=http://www.geewantha.com&scope=likes+comments&display=touch';
     
     webView.addEventListener('beforeload', function(e){
+    	Ti.App.fireEvent('openLoadingScreen');
     	if (e.url.indexOf('#access_token') != -1){
             var token = e.url.split("=")[1];
             Ti.App.Properties.setString("access_token",token);
@@ -103,7 +104,14 @@ exports.loginView = function(){
         }
     });
     
+    webView.addEventListener('load', function(e){
+    	Ti.App.fireEvent('hideLoadingScreen');
+    });
+    
     login_view.add(webView);
+    
+
+	
     
     return login_view;
 };

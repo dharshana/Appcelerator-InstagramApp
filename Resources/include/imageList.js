@@ -1,7 +1,6 @@
 exports.getImageList = function(){
 	
 	updateProfileDetails();
-	
 	var mainView = Ti.UI.createView({
 		layout : 'vertical',
 		height : '100%',
@@ -44,7 +43,9 @@ exports.getImageList = function(){
 		    // cancel area
 		}else{
 		    //var activity = Titanium.Android.currentActivity; activity.finish();
+		    Ti.App.fireEvent('openLoadingScreen');
 		    mainView.remove(imagesView);
+		    mainView.remove(pageHeader);
 			Ti.App.fireEvent('logout');
 			var toast1 = Ti.UI.createNotification({
 				message : "You've Succesfully Logged Out",
@@ -88,6 +89,14 @@ exports.getImageList = function(){
         	timeout : 5000, // in milliseconds
 			autoEncodeUrl : false,
 		    // function called when the response data is available
+		    
+		    onreadystatechange: function(){
+		    	if(this.readyState == 1 || this.readyState == 2 || this.readyState == 3){
+		    		Ti.App.fireEvent('openLoadingScreen');
+		    	}else if(this.readyState == 4){
+		    		Ti.App.fireEvent('hideLoadingScreen');
+		    	}		    	
+			},
 		    onload : function(e) {
 		    	var JSONObject = [];
 				var JSONObject = JSON.parse(this.responseText);
@@ -109,6 +118,7 @@ exports.getImageList = function(){
 					imageTableData.push(tableRow);
 		        }
 		        imageTableView.data = imageTableData;
+		        
 		    },
 		    // function called when an error occurs, including a timeout
 		    onerror : function(e) {
